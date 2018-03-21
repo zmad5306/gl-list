@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.example.gl.list.model.GenericApiResponse;
 import com.example.gl.list.model.GroceryList;
 import com.example.gl.list.model.Item;
 
@@ -94,12 +95,12 @@ public class ListController {
 			produces = MediaType.APPLICATION_JSON_VALUE,
 			value="/"
 		)
-	public ResponseEntity<?> saveList(@RequestBody GroceryList list, @RequestHeader("sso_user") String username) {
+	public ResponseEntity<GenericApiResponse> saveList(@RequestBody GroceryList list, @RequestHeader("sso_user") String username) {
 		list.setItems(null);
 		list.setUsername(username);
 		list.setId(getNextListId());
 		this.lists.add(list);
-		return new ResponseEntity<>(HttpStatus.OK);
+		return new ResponseEntity<>(new GenericApiResponse(), HttpStatus.OK);
 	}
 	
 	@RequestMapping(
@@ -107,7 +108,7 @@ public class ListController {
 			produces = MediaType.APPLICATION_JSON_VALUE,
 			value="/{listId}"
 		)
-	public ResponseEntity<?> updateList(@PathVariable Long listId, @RequestBody GroceryList list, @RequestHeader("sso_user") String username) {
+	public ResponseEntity<GenericApiResponse> updateList(@PathVariable Long listId, @RequestBody GroceryList list, @RequestHeader("sso_user") String username) {
 		List<GroceryList> lists = getListById(username, listId);
 		if (lists.isEmpty()) {
 			return new ResponseEntity<>(HttpStatus.NOT_FOUND); 
@@ -120,7 +121,7 @@ public class ListController {
 			produces = MediaType.APPLICATION_JSON_VALUE,
 			value="/{listId}"
 		)
-	public ResponseEntity<?> deleteList(@PathVariable Long listId, @RequestHeader("sso_user") String username) {
+	public ResponseEntity<GenericApiResponse> deleteList(@PathVariable Long listId, @RequestHeader("sso_user") String username) {
 		List<GroceryList> lists = getListById(username, listId);
 		if (lists.isEmpty()) {
 			return new ResponseEntity<>(HttpStatus.NOT_FOUND); 
@@ -172,7 +173,7 @@ public class ListController {
 			produces = MediaType.APPLICATION_JSON_VALUE,
 			value="/{listId}/item"
 		)
-	public ResponseEntity<?> saveItem(@PathVariable Long listId, @RequestBody Item item, @RequestHeader("sso_user") String username) {
+	public ResponseEntity<GenericApiResponse> saveItem(@PathVariable Long listId, @RequestBody Item item, @RequestHeader("sso_user") String username) {
 		List<GroceryList> lists = getListById(username, listId);
 		if (lists.isEmpty()) {
 			return new ResponseEntity<>(HttpStatus.NOT_FOUND); 
@@ -185,7 +186,7 @@ public class ListController {
 			produces = MediaType.APPLICATION_JSON_VALUE,
 			value="/{listId}/item/{itemId}"
 		)
-	public ResponseEntity<?> updateItem(@PathVariable Long listId, @PathVariable Long itemId, @RequestBody Item item, @RequestHeader("sso_user") String username) {
+	public ResponseEntity<GenericApiResponse> updateItem(@PathVariable Long listId, @PathVariable Long itemId, @RequestBody Item item, @RequestHeader("sso_user") String username) {
 		List<GroceryList> lists = getListById(username, listId);
 		if (lists.isEmpty()) {
 			return new ResponseEntity<>(HttpStatus.NOT_FOUND); 
@@ -198,7 +199,7 @@ public class ListController {
 			produces = MediaType.APPLICATION_JSON_VALUE,
 			value="/{listId}/item/{itemId}"
 		)
-	public ResponseEntity<?> deleteItem(@PathVariable Long listId, @PathVariable Long itemId, @RequestHeader("sso_user") String username) {
+	public ResponseEntity<GenericApiResponse> deleteItem(@PathVariable Long listId, @PathVariable Long itemId, @RequestHeader("sso_user") String username) {
 		List<GroceryList> lists = getListById(username, listId);
 		if (lists.isEmpty()) {
 			return new ResponseEntity<>(HttpStatus.NOT_FOUND); 
