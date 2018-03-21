@@ -64,6 +64,18 @@ public class ListController {
 		return max.getAsLong() + 1L;
 	}
 	
+	List<Item> getItem(GroceryList list, Long itemId) {
+		return list.getItems().stream().filter(i -> i.getId().equals(itemId)).collect(Collectors.toList());
+	}
+	
+	Long getNextItemId() {
+		List<List<Item>> itemLists = new ArrayList<>();
+		this.lists.stream().forEach(gl -> itemLists.add(gl.getItems()));
+		List<Item> collect = itemLists.stream().collect(ArrayList::new, List::addAll, List::addAll);
+		OptionalLong max = collect.stream().map(i -> i.getId()).mapToLong(Long::longValue).max();
+		return max.getAsLong() + 1L;
+	}
+	
 	@RequestMapping(
 			method = RequestMethod.GET,
 			produces = MediaType.APPLICATION_JSON_VALUE,
@@ -113,7 +125,17 @@ public class ListController {
 		if (lists.isEmpty()) {
 			return new ResponseEntity<>(HttpStatus.NOT_FOUND); 
 		}
-		return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+		
+		GroceryList existingList = lists.get(0);
+		
+		list.setId(existingList.getId());
+		list.setItems(existingList.getItems());
+		list.setUsername(username);
+		
+		this.lists.remove(existingList);
+		this.lists.add(list);
+		
+		return new ResponseEntity<>(new GenericApiResponse(), HttpStatus.OK);
 	}
 	
 	@RequestMapping(
@@ -126,7 +148,10 @@ public class ListController {
 		if (lists.isEmpty()) {
 			return new ResponseEntity<>(HttpStatus.NOT_FOUND); 
 		}
-		return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+		
+		this.lists.remove(lists.get(0));
+		
+		return new ResponseEntity<>(new GenericApiResponse(), HttpStatus.OK);
 	}
 	
 	@RequestMapping(
@@ -139,7 +164,8 @@ public class ListController {
 		if (lists.isEmpty()) {
 			return new ResponseEntity<>(HttpStatus.NOT_FOUND); 
 		}
-		return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+		
+		return new ResponseEntity<>(lists.get(0).getItems(), HttpStatus.NOT_FOUND);
 	}
 	
 	@RequestMapping(
@@ -152,20 +178,9 @@ public class ListController {
 		if (lists.isEmpty()) {
 			return new ResponseEntity<>(HttpStatus.NOT_FOUND); 
 		}
-		return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-	}
-	
-	@RequestMapping(
-			method = RequestMethod.GET,
-			produces = MediaType.APPLICATION_JSON_VALUE,
-			value="/{listId}/item/{itemId}"
-		)
-	public ResponseEntity<GroceryList> getItem(@PathVariable Long listId, @RequestHeader("sso_user") String username) {
-		List<GroceryList> lists = getListById(username, listId);
-		if (lists.isEmpty()) {
-			return new ResponseEntity<>(HttpStatus.NOT_FOUND); 
-		}
-		return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+		
+		List<Item> items = lists.get(0).getItems().stream().filter(i -> i.getDepartmentId().equals(departmentId)).collect(Collectors.toList());
+		return new ResponseEntity<>(items, HttpStatus.OK);
 	}
 	
 	@RequestMapping(
@@ -178,7 +193,12 @@ public class ListController {
 		if (lists.isEmpty()) {
 			return new ResponseEntity<>(HttpStatus.NOT_FOUND); 
 		}
-		return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+		
+		item.setId(getNextItemId());
+		
+		lists.get(0).getItems().add(item);
+		
+		return new ResponseEntity<>(new GenericApiResponse(), HttpStatus.OK);
 	}
 	
 	@RequestMapping(
@@ -191,7 +211,21 @@ public class ListController {
 		if (lists.isEmpty()) {
 			return new ResponseEntity<>(HttpStatus.NOT_FOUND); 
 		}
-		return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+		
+		List<Item> items = getItem(lists.get(0), itemId);
+		if (items.isEmpty()) {
+			return new ResponseEntity<>(HttpStatus.NOT_FOUND); 
+		}
+		
+		GroceryList list = lists.get(0);
+		Item existingItem = items.get(0);
+		
+		item.setId(existingItem.getId());
+		
+		list.getItems().remove(existingItem);
+		list.getItems().add(item);
+				
+		return new ResponseEntity<>(new GenericApiResponse(), HttpStatus.OK);
 	}
 	
 	@RequestMapping(
@@ -204,7 +238,15 @@ public class ListController {
 		if (lists.isEmpty()) {
 			return new ResponseEntity<>(HttpStatus.NOT_FOUND); 
 		}
-		return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+		
+		List<Item> items = getItem(lists.get(0), itemId);
+		if (items.isEmpty()) {
+			return new ResponseEntity<>(HttpStatus.NOT_FOUND); 
+		}
+		
+		lists.get(0).getItems().remove(items.get(0));
+		
+		return new ResponseEntity<>(new GenericApiResponse(), HttpStatus.OK);
 	}
 
 }

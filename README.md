@@ -26,7 +26,6 @@ Grocery list, list service
 | /api/list/{listId}                     |DELETE  | Deletes a list                                 |
 | /api/list/{listId}/item                |GET     | Gets items in the list                         |
 | /api/list/{listId}/item/{departmentId} |GET     | Gets items in the list for a single department |
-| /api/list/{listId}/item/{itemId}       |GET     | Gets a single item from the list               |
 | /api/list/{listId}/item                |POST    | Adds a new item to the list                    |
 | /api/list/{listId}/item/{itemId}       |PUT     | Updates an item in the list                    |
 | /api/list/{listId}/item/{itemId}       |DELETE  | Deletes an item from the list                  |
