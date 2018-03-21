@@ -7,6 +7,12 @@ Grocery list, list service
 
 `docker build . --build-arg version=0.0.1-SNAPSHOT -t gl-list:latest`
 
+## Deploy with Kubernetes
+
+`kubectl apply -f k8s/deployment.yml`
+
+`kubectl apply -f k8s/service.yml`
+
 # API
 
 | URL                              | Method | Description                      |
