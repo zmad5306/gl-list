@@ -1,4 +1,4 @@
-package com.example.gl.list;
+package com.example.gl.list.controller;
 
 import java.util.List;
 
@@ -12,55 +12,53 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.gl.list.model.GroceryList;
-import com.example.gl.list.model.Item;
 
 @RestController
-public class ItemController {
+public class ListController {
 	
 	@RequestMapping(
 			method = RequestMethod.GET,
 			produces = MediaType.APPLICATION_JSON_VALUE,
-			value="/{listId}/item"
+			value="/"
 		)
-	public ResponseEntity<List<Item>> getItems(@PathVariable Long listId) {
+	public ResponseEntity<List<GroceryList>> getLists() {
 		return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 	}
 	
 	@RequestMapping(
 			method = RequestMethod.GET,
 			produces = MediaType.APPLICATION_JSON_VALUE,
-			value="/{listId}/item/{itemId}"
+			value="/{listId}"
 		)
-	public ResponseEntity<GroceryList> getDepartment(@PathVariable Long listId) {
+	public ResponseEntity<GroceryList> getList(@PathVariable Long listId) {
 		return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 	}
 	
 	@RequestMapping(
 			method = RequestMethod.POST,
 			produces = MediaType.APPLICATION_JSON_VALUE,
-			value="/{listId}/item"
+			value="/"
 		)
-	public ResponseEntity<?> saveDepartment(@PathVariable Long listId, @RequestBody Item item) {
+	public ResponseEntity<?> saveList(@RequestBody GroceryList department) {
 		return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 	}
 	
 	@RequestMapping(
 			method = RequestMethod.PUT,
 			produces = MediaType.APPLICATION_JSON_VALUE,
-			value="/{listId}/item/{itemId}"
+			value="/{listId}"
 		)
-	public ResponseEntity<?> updateDepartment(@PathVariable Long listId, @PathVariable Long itemId, @RequestBody Item item) {
+	public ResponseEntity<?> updateList(@PathVariable Long listId, @RequestBody GroceryList list) {
 		return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 	}
 	
 	@RequestMapping(
 			method = RequestMethod.DELETE,
 			produces = MediaType.APPLICATION_JSON_VALUE,
-			value="/{listId}/item/{itemId}"
+			value="/{listId}"
 		)
-	public ResponseEntity<?> deleteDepartment(@PathVariable Long listId, @PathVariable Long itemId) {
+	public ResponseEntity<?> deleteList(@PathVariable Long listId) {
 		return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 	}
-	
 
 }
