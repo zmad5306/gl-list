@@ -29,6 +29,15 @@ public class ItemController {
 	@RequestMapping(
 			method = RequestMethod.GET,
 			produces = MediaType.APPLICATION_JSON_VALUE,
+			value="/{listId}/item/{departmentId}"
+		)
+	public ResponseEntity<List<Item>> getItems(@PathVariable Long listId, @PathVariable Long departmentId) {
+		return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+	}
+	
+	@RequestMapping(
+			method = RequestMethod.GET,
+			produces = MediaType.APPLICATION_JSON_VALUE,
 			value="/{listId}/item/{itemId}"
 		)
 	public ResponseEntity<GroceryList> getDepartment(@PathVariable Long listId) {
