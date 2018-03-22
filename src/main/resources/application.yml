@@ -1,4 +1,4 @@
 server:
   port: 8080
   servlet:
-    contextPath: /api/list
+    contextPath: /list
