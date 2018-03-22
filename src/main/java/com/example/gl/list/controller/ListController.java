@@ -36,7 +36,7 @@ public class ListController {
 			Link selfLink = linkTo(ListController.class).slash(list.getListId()).withSelfRel();
 			list.add(selfLink);
 			
-			Link itemsLink = new Link("/api/items/" + list.getListId()).withTitle("items");
+			Link itemsLink = new Link("/api/item/" + list.getListId()).withTitle("items");
 			list.add(itemsLink);
 		}
 		return lists;
