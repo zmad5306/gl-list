@@ -6,7 +6,7 @@ import com.example.gl.list.model.ListModel;
 
 public class ListDto extends ResourceSupport {
 	
-	private Long listId;
+	private String listId;
 	private String name;
 	private String username;
 	
@@ -22,11 +22,11 @@ public class ListDto extends ResourceSupport {
 		}
 	}
 
-	public Long getListId() {
+	public String getListId() {
 		return listId;
 	}
 
-	public void setListId(Long listId) {
+	public void setListId(String listId) {
 		this.listId = listId;
 	}
 

@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.gl.list.dto.ListDto;
+import com.example.gl.list.dto.ListInputDto;
 import com.example.gl.list.service.ListService;
 
 @RestController
@@ -47,7 +48,7 @@ public class ListController {
 			produces = MediaType.APPLICATION_JSON_VALUE,
 			value="/{listId}"
 		)
-	public ResponseEntity<ListDto> getList(@PathVariable Long listId, @RequestHeader("sso_user") String username) {
+	public ResponseEntity<ListDto> getList(@PathVariable String listId, @RequestHeader("sso_user") String username) {
 		ListDto list = service.getList(username, listId);
 		if (list == null) {
 			return new ResponseEntity<>(HttpStatus.NOT_FOUND); 
@@ -67,14 +68,14 @@ public class ListController {
 			produces = MediaType.APPLICATION_JSON_VALUE,
 			value="/"
 		)
-	public ResponseEntity<ListDto> saveList(@RequestBody ListDto list, @RequestHeader("sso_user") String username) {
-		ListDto ld = service.newList(username, list);
+	public ResponseEntity<ListDto> saveList(@RequestBody ListInputDto list, @RequestHeader("sso_user") String username) {
+		ListDto ld = service.insertList(username, list);
 		
 		Link selfLink = linkTo(ListController.class).slash(ld.getListId()).withSelfRel();
 		ld.add(selfLink);
 		
-		Link itemsLink = new Link("/api/items/" + list.getListId()).withTitle("items");
-		list.add(itemsLink);
+		Link itemsLink = new Link("/api/items/" + ld.getListId()).withTitle("items");
+		ld.add(itemsLink);
 		
 		return new ResponseEntity<>(ld, HttpStatus.OK);
 	}
@@ -84,8 +85,8 @@ public class ListController {
 			produces = MediaType.APPLICATION_JSON_VALUE,
 			value="/{listId}"
 		)
-	public ResponseEntity<?> updateList(@PathVariable Long listId, @RequestBody ListDto list, @RequestHeader("sso_user") String username) {
-		service.changeList(username, list);
+	public ResponseEntity<?> updateList(@PathVariable String listId, @RequestBody ListInputDto list, @RequestHeader("sso_user") String username) {
+		service.saveList(listId, username, list);
 		return new ResponseEntity<>(HttpStatus.OK);
 	}
 	
@@ -94,7 +95,7 @@ public class ListController {
 			produces = MediaType.APPLICATION_JSON_VALUE,
 			value="/{listId}"
 		)
-	public ResponseEntity<?> deleteList(@PathVariable Long listId, @RequestHeader("sso_user") String username) {
+	public ResponseEntity<?> deleteList(@PathVariable String listId, @RequestHeader("sso_user") String username) {
 		service.deleteList(username, listId);
 		return new ResponseEntity<>(HttpStatus.OK);
 	}

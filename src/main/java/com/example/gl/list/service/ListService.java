@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.example.gl.list.dto.ListDto;
+import com.example.gl.list.dto.ListInputDto;
 import com.example.gl.list.model.ListModel;
 import com.example.gl.list.repository.ListRepository;
 
@@ -17,24 +18,28 @@ public class ListService {
 	private ListRepository repo;
 	
 	public List<ListDto> getAllLists(String username) {
-		return repo.fetchAll(username).stream().map(lm -> new ListDto(lm)).collect(Collectors.toList());
+		return repo.findByUsername(username).stream().map(lm -> new ListDto(lm)).collect(Collectors.toList());
 	}
 	
-	public ListDto getList(String username, Long listId) {
-		ListModel lm = repo.fetch(username, listId);
+	public ListDto getList(String username, String listId) {
+		ListModel lm = repo.findByListIdAndUsername(listId, username);
 		return new ListDto(lm);
 	}
 	
-	public ListDto newList(String username, ListDto list) {
-		return new ListDto(repo.save(username, new ListModel(null, list.getName(), username)));
+	public ListDto insertList(String username, ListInputDto list) {
+		ListModel lm = new ListModel(list, username);
+		return new ListDto(repo.insert(lm));
 	}
 	
-	public void changeList(String username, ListDto list) {
-		repo.update(username, new ListModel(list.getListId(), list.getName(), list.getUsername()));
+	public void saveList(String listId, String username, ListInputDto list) {
+		ListModel lm = repo.findByListIdAndUsername(listId, username);
+		lm.apply(list);
+		repo.save(lm);
 	}
 	
-	public void deleteList(String username, Long listId) {
-		repo.delete(username, listId);
+	public void deleteList(String username, String listId) {
+		ListModel lm = repo.findByListIdAndUsername(listId, username);
+		repo.delete(lm);
 	}
 
 }
