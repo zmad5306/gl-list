@@ -1,8 +1,13 @@
 package com.example.gl.list.model;
 
+import org.springframework.data.annotation.Id;
+
+import com.example.gl.list.dto.ListInputDto;
+
 public class ListModel {
 	
-	private Long listId;
+	@Id
+	private String listId;
 	private String name;
 	private String username;
 	
@@ -10,18 +15,27 @@ public class ListModel {
 		super();
 	}
 
-	public ListModel(Long listId, String name, String username) {
+	public ListModel(String name, String username) {
 		super();
-		this.listId = listId;
 		this.name = name;
 		this.username = username;
 	}
+	
+	public ListModel(ListInputDto list, String username) {
+		super();
+		this.name = list.getName();
+		this.username = username;
+	}
+	
+	public void apply(ListInputDto list) {
+		this.name = list.getName();
+	}
 
-	public Long getListId() {
+	public String getListId() {
 		return listId;
 	}
 
-	public void setListId(Long listId) {
+	public void setListId(String listId) {
 		this.listId = listId;
 	}
 
