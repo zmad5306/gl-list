@@ -10,6 +10,10 @@ public class ListDto extends ResourceSupport {
 	private String name;
 	private String username;
 	
+	public ListDto() {
+		super();
+	}
+
 	public ListDto(ListModel list) {
 		if (null != list) {
 			this.listId = list.getListId();

@@ -47,7 +47,7 @@ public class ListController {
 			produces = MediaType.APPLICATION_JSON_VALUE,
 			value="/{listId}"
 		)
-	public ResponseEntity<ListDto> getList(@PathVariable Long listId, @RequestHeader("sso_user") String username, @RequestHeader("x-forwarded-for") String fwdUrl) {
+	public ResponseEntity<ListDto> getList(@PathVariable Long listId, @RequestHeader("sso_user") String username) {
 		ListDto list = service.getList(username, listId);
 		if (list == null) {
 			return new ResponseEntity<>(HttpStatus.NOT_FOUND); 
@@ -56,7 +56,7 @@ public class ListController {
 		Link selfLink = linkTo(ListController.class).slash(list.getListId()).withSelfRel();
 		list.add(selfLink);
 		
-		Link itemsLink = new Link(fwdUrl + "/api/items/" + list.getListId()).withTitle("items");
+		Link itemsLink = new Link("/api/items/" + list.getListId()).withTitle("items");
 		list.add(itemsLink);
 		
 		return new ResponseEntity<>(list, HttpStatus.OK);
@@ -67,13 +67,13 @@ public class ListController {
 			produces = MediaType.APPLICATION_JSON_VALUE,
 			value="/"
 		)
-	public ResponseEntity<ListDto> saveList(@RequestBody ListDto list, @RequestHeader("sso_user") String username, @RequestHeader("x-forwarded-for") String fwdUrl) {
+	public ResponseEntity<ListDto> saveList(@RequestBody ListDto list, @RequestHeader("sso_user") String username) {
 		ListDto ld = service.newList(username, list);
 		
 		Link selfLink = linkTo(ListController.class).slash(ld.getListId()).withSelfRel();
 		ld.add(selfLink);
 		
-		Link itemsLink = new Link(fwdUrl + "/api/items/" + list.getListId()).withTitle("items");
+		Link itemsLink = new Link("/api/items/" + list.getListId()).withTitle("items");
 		list.add(itemsLink);
 		
 		return new ResponseEntity<>(ld, HttpStatus.OK);
