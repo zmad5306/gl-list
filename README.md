@@ -7,6 +7,10 @@ Grocery list, list service
 
 `docker push zmad5306/gl-list:latest`
 
+## Circle CI Build
+
+https://circleci.com/gh/zmad5306/gl-list
+
 # API
 
 | URL                                    | Method | Description                                    |
