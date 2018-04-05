@@ -68,7 +68,7 @@ steps:
             spec:
               containers:
                 - name: gl-list
-                  image: gcr.io/${PROJECT_ID}/gl-list:${COMMIT_SHA}
+                  image: gcr.io/${PROJECT_ID}/github-zmad5306-gl-list:${COMMIT_SHA}
         EOF
 
         kubectl patch --local -o yaml \
