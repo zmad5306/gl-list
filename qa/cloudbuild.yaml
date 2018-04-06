@@ -157,7 +157,6 @@ steps:
 
         hub push origin update-deployment-${BUILD_ID}
 
-        # Create a pull request to the ${_GITHUB_USERNAME}/gl-infrastructure-production repo.
         hub pull-request -F- <<EOF
         Update the gl-list deployment
 
