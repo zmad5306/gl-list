@@ -43,6 +43,8 @@ steps:
       - name: 'kube'
         path: /kube
 
+   # Clone the https://github.com/zmad5306/gl-infrastructure-qa.git repo.
+  # deployment manifests.
   - name: 'gcr.io/hightowerlabs/hub'
     env:
       - 'HUB_CONFIG=/config/hub'
@@ -112,36 +114,27 @@ steps:
         hub config --global user.email "$${ACTIVE_ACCOUNT}"
         hub config --global user.name "Google Container Builder"
         
-        hub clone "https://github.com/zmad5306/gl-infrastructure-qa.git"
-
         hub clone "https://github.com/zmad5306/gl-infrastructure-production.git"
         
-        # Extract the container image from the qa list deployment configuration file.
-        CONTAINER_IMAGE=$(kubectl apply --dry-run \
-           -f gl-infrastructure-qa/kubernetes/deployments/gl-list-deployment.yaml \
-           -o jsonpath='{.spec.template.spec.containers[?(@.name == "gl-list")].image}')
-
+        cd gl-infrastructure-production
+        
+        git checkout -b update-deployment-${BUILD_ID}
+        
         cat <<EOF > patch.yaml
         spec:
           template:
             spec:
               containers:
                 - name: gl-list
-                  image: $${CONTAINER_IMAGE}
+                  image: gcr.io/${PROJECT_ID}/github-zmad5306-gl-list:${TAG_NAME}
         EOF
 
         kubectl patch --local -o yaml \
-          -f gl-infrastructure-production/kubernetes/deployments/gl-list-deployment.yaml \
+          -f kubernetes/deployments/gl-list-deployment.yaml \
           -p "$(cat patch.yaml)" \
           > gl-list-deployment.yaml
-
-        mv gl-list-deployment.yaml gl-infrastructure-production/kubernetes/deployments/gl-list-deployment.yaml
-
-        # Change to the gl-infrastructure-production directory
-        # commit the local changes, then issue a pull request.
-        cd gl-infrastructure-production
-
-        git checkout -b update-deployment-${BUILD_ID}
+        
+        mv gl-list-deployment.yaml kubernetes/deployments/gl-list-deployment.yaml
 
         hub add kubernetes/deployments/gl-list-deployment.yaml
  
@@ -157,7 +150,6 @@ steps:
 
         hub push origin update-deployment-${BUILD_ID}
 
-        # Create a pull request to the ${_GITHUB_USERNAME}/gl-infrastructure-production repo.
         hub pull-request -F- <<EOF
         Update the gl-list deployment
 
