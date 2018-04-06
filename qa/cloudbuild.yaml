@@ -2,7 +2,7 @@
 steps:
   # build container
   - name: 'gcr.io/cloud-builders/docker'
-    args: ["build", "-t", "gcr.io/oceanic-isotope-199421/github-zmad5306-gl-item:${TAG_NAME}", "--build-arg", "version=0.0.1-SNAPSHOT", "."]
+    args: ["build", "-t", "gcr.io/oceanic-isotope-199421/github-zmad5306-gl-list:${TAG_NAME}", "--build-arg", "version=0.0.1-SNAPSHOT", "."]
     
   # Retrieve and decrypt the GitHub Hub configuration. 
   - name: 'gcr.io/cloud-builders/gcloud'
@@ -69,25 +69,25 @@ steps:
           template:
             spec:
               containers:
-                - name: gl-item
-                  image: gcr.io/${PROJECT_ID}/github-zmad5306-gl-item:${TAG_NAME}
+                - name: gl-list
+                  image: gcr.io/${PROJECT_ID}/github-zmad5306-gl-list:${TAG_NAME}
         EOF
 
         kubectl patch --local -o yaml \
-          -f kubernetes/deployments/gl-item-deployment.yaml \
+          -f kubernetes/deployments/gl-list-deployment.yaml \
           -p "$(cat patch.yaml)" \
-          > gl-item-deployment.yaml
+          > gl-list-deployment.yaml
 
-        mv gl-item-deployment.yaml kubernetes/deployments/gl-item-deployment.yaml
+        mv gl-list-deployment.yaml kubernetes/deployments/gl-list-deployment.yaml
 
-        hub add kubernetes/deployments/gl-item-deployment.yaml
+        hub add kubernetes/deployments/gl-list-deployment.yaml
               
         hub commit -F- <<EOF
-        Update the gl-item-deployment application
+        Update the gl-list-deployment application
 
-        This commit updates the gl-item deployment container image to:
+        This commit updates the gl-list deployment container image to:
 
-            gcr.io/${PROJECT_ID}/github-zmad5306-gl-item:${TAG_NAME}.
+            gcr.io/${PROJECT_ID}/github-zmad5306-gl-list:${TAG_NAME}.
 
         Build ID: ${BUILD_ID}
         EOF
@@ -125,23 +125,23 @@ steps:
           template:
             spec:
               containers:
-                - name: gl-item
-                  image: gcr.io/${PROJECT_ID}/github-zmad5306-gl-item:${TAG_NAME}
+                - name: gl-list
+                  image: gcr.io/${PROJECT_ID}/github-zmad5306-gl-list:${TAG_NAME}
         EOF
 
         kubectl patch --local -o yaml \
-          -f kubernetes/deployments/gl-item-deployment.yaml \
+          -f kubernetes/deployments/gl-list-deployment.yaml \
           -p "$(cat patch.yaml)" \
-          > gl-item-deployment.yaml
+          > gl-list-deployment.yaml
         
-        mv gl-item-deployment.yaml kubernetes/deployments/gl-item-deployment.yaml
+        mv gl-list-deployment.yaml kubernetes/deployments/gl-list-deployment.yaml
 
-        hub add kubernetes/deployments/gl-item-deployment.yaml
+        hub add kubernetes/deployments/gl-list-deployment.yaml
  
         hub commit -F- <<EOF
-        Update the gl-item-deployment deployment
+        Update the gl-list-deployment deployment
 
-        This commit updates the gl-item-deployment container image to:
+        This commit updates the gl-list-deployment container image to:
 
             $${CONTAINER_IMAGE}
 
@@ -151,9 +151,9 @@ steps:
         hub push origin update-deployment-${BUILD_ID}
 
         hub pull-request -F- <<EOF
-        Update the gl-item deployment
+        Update the gl-list deployment
 
-        This commit updates the gl-item deployment container image to:
+        This commit updates the gl-list deployment container image to:
 
             $${CONTAINER_IMAGE}
 
@@ -166,4 +166,4 @@ steps:
         path: /kube     
 
 images:
-  - 'gcr.io/${PROJECT_ID}/github-zmad5306-gl-item:${TAG_NAME}'
+  - 'gcr.io/${PROJECT_ID}/github-zmad5306-gl-list:${TAG_NAME}'
